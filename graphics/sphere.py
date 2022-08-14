@@ -36,7 +36,7 @@ class Sphere(Object):
 
         res = []
         for root in roots:
-            if root >= 0:
+            if root >= 0 and not np.iscomplex(root):
                 res.append(ray.origin + ray.direction * root)
 
         return res
