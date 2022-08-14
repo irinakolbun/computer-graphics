@@ -1,4 +1,4 @@
-from .point import Point
-from .camera import Camera
 from .vector import Vector3
+from .camera import Camera
 from .plane import Plane
+from .sphere import Sphere

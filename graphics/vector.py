@@ -40,28 +40,40 @@ class Vector3:
     def __str__(self):
         return f'(x={self.x}, y={self.y}, z={self.z})'
 
+    def __repr__(self):
+        return str(self)
+
+    def __copy__(self):
+        return Vector3(self.x, self.y, self.z)
+
     def __neg__(self):
         # noinspection PyTypeChecker
         return Vector3(-self.x, -self.y, -self.z)
+
+    def __truediv__(self, other: np.float64):
+        # noinspection PyTypeChecker
+        return Vector3(self.x / other, self.y / other, self.z / other)
 
     def __abs__(self):
         return np.sqrt(self.x**2 + self.y**2 + self.z**2)
 
     def __mul__(self, other):
-        '''
+        """
         Dot product
-
         :param other: other vector
         :return: float: scalar
-        '''
-        return self.x * other.x + self.y + other.y + self.z * other.z
+        """
+        if type(other) is Vector3:
+            return self.x * other.x + self.y * other.y + self.z * other.z
+        else:
+            return Vector3(self.x * other, self.y * other, self.z * other)
 
     def __matmul__(self, other):
-        '''
+        """
         Cross product
         :param other: other vector
         :return: Vector3
-        '''
+        """
         return Vector3(self.y * other.z - self.z * other.y,
                        self.z * other.x - self.x * other.z,
                        self.x * other.y - self.y * other.x)
