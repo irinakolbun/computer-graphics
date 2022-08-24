@@ -1,6 +1,5 @@
 from copy import copy
-from graphics import Vector3
-from ray import Ray
+from graphics import Vector3, Ray
 import numpy as np
 
 

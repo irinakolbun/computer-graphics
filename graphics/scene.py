@@ -19,13 +19,25 @@ class Scene:
                                                     (0, 1, 0, 0),
                                                     (0, 0, 1, 0),
                                                     (0, 0, 0, 1))))
+        self._light_source = Vector3(0, 1, 1).normalize()
 
     def add_object(self, obj: Object):
         self._objects.append(obj)
 
     def cast_ray(self, camera):
+        min_dist, res = np.finfo(np.float64).max, None
         intersections = [x.ray_intersect(camera) for x in self._objects]
-        return any(intersections)
+        flat_int = [x for sub in intersections for x in sub]
+        for intersection in flat_int:
+            if abs(intersection[0]) < min_dist:
+                min_dist = abs(intersection[0])
+                res = intersection
+
+        if res is not None:
+            # return 1
+            return self._light_source * res[1] if self._light_source * res[1] > 0 else 0
+        else:
+            return 0
 
     def render(self):
         origin = self._camera_to_world.mult_vec_matrix(self._camera.origin)

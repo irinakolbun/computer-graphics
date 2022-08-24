@@ -32,11 +32,19 @@ class Sphere(Object):
         b = ray.direction * L * 2
         c = L * L - self.radius
 
+        # discriminant = b*b - 4*a*c
+        #
+        # if discriminant < 0:
+        #     roots = []
+        #
+        # roots = [(-b - np.sqrt(discriminant)) / (a*2), (-b + np.sqrt(discriminant)) / (a*2)]
+
         roots = np.roots([a, b, c])
 
         res = []
         for root in roots:
             if root >= 0 and not np.iscomplex(root):
-                res.append(ray.origin + ray.direction * root)
+                res.append([ray.origin + ray.direction * root,  # intersection point
+                            ((ray.origin + ray.direction * root) - self.center).normalize()])  # normal vector
 
         return res
