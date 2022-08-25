@@ -12,14 +12,15 @@ class Scene:
         self._width = width
         self._height = height
         self._fov = fov
-        self._fb = np.zeros((width, height), np.float64)
+        # self._fb = np.zeros((width, height), np.float64)
+        self._fb = np.zeros((width, height, 3), dtype=np.uint8)
         self._scale = np.tan(np.deg2rad(self._fov * 0.5))
         self._aspect_ratio = np.float64(self._width) / np.float64(self._height)
         self._camera_to_world = Matrix44f(np.array(((1, 0, 0, 0),
                                                     (0, 1, 0, 0),
                                                     (0, 0, 1, 0),
                                                     (0, 0, 0, 1))))
-        self._light_source = Vector3(0, 1, 1).normalize()
+        self._light_source = Vector3(1, 1, 1).normalize()
 
     def add_object(self, obj: Object):
         self._objects.append(obj)
@@ -29,15 +30,29 @@ class Scene:
         intersections = [x.ray_intersect(camera) for x in self._objects]
         flat_int = [x for sub in intersections for x in sub]
         for intersection in flat_int:
-            if abs(intersection[0]) < min_dist:
-                min_dist = abs(intersection[0])
+            if abs(camera.origin - intersection[0]) < min_dist:
+                min_dist = abs(camera.origin - intersection[0])
                 res = intersection
+                # [
+                #     [[Vector3(), Vector3()], [Vector3(), Vector3()]],
+                #     [[Vector3(), Vector3()]],
+                #     []
+                #  ]
+                # ->
+                # [Vector3(), Vector3()], [Vector3(), Vector3()], [Vector3(), Vector3()], []
+
+        # if res is not None:
+        #     # return 1
+        #     return self._light_source * res[1] if self._light_source * res[1] > 0 else 0
+        # else:
+        #     return 0
 
         if res is not None:
             # return 1
-            return self._light_source * res[1] if self._light_source * res[1] > 0 else 0
+            normal_color = ((Vector3(1, 1, 1) + res[1])*0.5)*255
+            return Vector3.to_array(normal_color*(self._light_source*res[1])) if self._light_source * res[1] > 0 else Vector3.to_array(Vector3(0, 0, 0))
         else:
-            return 0
+            return Vector3.to_array(Vector3(50, 0, 0))
 
     def render(self):
         origin = self._camera_to_world.mult_vec_matrix(self._camera.origin)
@@ -47,5 +62,6 @@ class Scene:
                 y = (1 - 2 * (j + 0.5) / np.float64(self._height)) * self._scale
                 direction = self._camera_to_world.mult_dir_matrix(Vector3(x, y, -1))
                 direction = direction.normalize()
-                self._fb[i][j] = self.cast_ray(Camera(origin, direction))
+                ray_casted = self.cast_ray(Camera(origin, direction))
+                self._fb[i][j] = ray_casted
         return self._fb.copy()
