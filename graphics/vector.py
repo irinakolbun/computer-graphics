@@ -81,5 +81,5 @@ class Vector3:
     def normalize(self):
         return self / abs(self)
 
-    def to_array(self):
+    def as_array(self):
         return [self.x, self.y, self.z]

@@ -4,3 +4,4 @@ from .camera import Camera
 from .plane import Plane
 from .sphere import Sphere
 from .scene import Scene
+from .triangle import Triangle
