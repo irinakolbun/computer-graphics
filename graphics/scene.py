@@ -44,7 +44,7 @@ class Scene:
                 # [Vector3(), Vector3()], [Vector3(), Vector3()], [Vector3(), Vector3()], []
 
         if res is not None:
-            shadow = 0.5 if [obj.ray_intersect(Camera(res[0], (self._light_source - res[0]).normalize())) for obj in self._objects] else 1
+            shadow = 0.7 if [obj.ray_intersect(Camera(res[0], (self._light_source - res[0]).normalize())) for obj in self._objects] else 1
             normal_color = ((Vector3(1, 1, 1) + res[1])*0.5)*255
             return (normal_color * shadow * (self._light_source * res[1])).as_array() if self._light_source * res[1] > 0 else [0, 0, 0]
         else:

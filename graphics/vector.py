@@ -57,6 +57,9 @@ class Vector3:
     def __abs__(self):
         return np.sqrt(self.x**2 + self.y**2 + self.z**2)
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y and self.z == other.z
+
     def __mul__(self, other):
         """
         Dot product
