@@ -1,5 +1,6 @@
 import numpy as np
 
+import graphics.transformation
 from graphics import Camera, Vector3
 from graphics.matrix import Matrix44f
 from graphics.object import Object
@@ -16,10 +17,11 @@ class Scene:
         self._fb = np.zeros((width, height, 3), dtype=np.uint8)
         self._scale = np.tan(np.deg2rad(self._fov * 0.5))
         self._aspect_ratio = np.float64(self._width) / np.float64(self._height)
-        self._camera_to_world = Matrix44f(np.array(((1, 0, 0, 0),
-                                                    (0, 1, 0, 0),
-                                                    (0, 0, 1, 0),
-                                                    (0, 0, 0, 1))))
+        # self._camera_to_world = Matrix44f(np.array(((1, 0, 0, 0),
+        #                                             (0, 0, 1, 0),
+        #                                             (0, 1, -1, 0),
+        #                                             (0, 0, 0, 1))))
+        self._camera_to_world = graphics.transformation.transformation
         self._light_source = Vector3(0, 1, 1).normalize()
 
     def add_object(self, obj: Object):
